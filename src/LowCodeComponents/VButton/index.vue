@@ -1,7 +1,7 @@
 <template>
-  <el-button>
+  <button border="~ gray-2" bg-white >
     {{ modelValue }}
-  </el-button>
+  </button>
 </template>
 
 <script setup lang="ts">

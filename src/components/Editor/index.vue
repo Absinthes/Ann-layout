@@ -2,13 +2,29 @@
   <el-scrollbar>
     <div
       id="editor"
-      @drop="handleDrop"
       relative
       ma
       bg-white
       :style="getEditorStyleComputed"
+      @mousedown.prevent.stop="handlerMouseDown"
     >
       <Grid />
+      <Shape
+        v-for="(it, index) in editComponentList"
+        :id="it.id!"
+        :active="currentComponent?.id == it.id"
+        :style="wrapStyleComputed(it)"
+      >
+        <component
+          w-full
+          h-full
+          :is="it.component()"
+          :style="componentStyleComputed(it)"
+          v-bind="bindPropComputed(it)"
+          :id="'component_' + it.id"
+          :data-index="index"
+        />
+      </Shape>
     </div>
   </el-scrollbar>
 </template>
@@ -17,10 +33,44 @@
 import { storeToRefs } from "pinia";
 import type { StyleValue } from "vue";
 import { useLowCodeStore } from "~/store";
+import { ComponentData } from "~/types/lowCode";
 
 const lowCodeStore = useLowCodeStore();
+const { editWidth, editHeight, editComponentList, currentComponent } =
+  storeToRefs(lowCodeStore);
 
-const { editWidth, editHeight } = storeToRefs(lowCodeStore);
+const componentStyleComputed = computed(() => {
+  return (component: ComponentData): StyleValue => {
+    const { width, height, left, top, ...rest } = component.style;
+    return {
+      ...rest,
+    };
+  };
+});
+
+const wrapStyleComputed = computed(() => {
+  return (component: ComponentData): StyleValue => {
+    const { width, height, left, top } = component.style;
+    return {
+      position: "absolute",
+      left: left + "px",
+      top: top + "px",
+      width: width + "px",
+      height: height + "px",
+    };
+  };
+});
+
+const bindPropComputed = computed(() => {
+  return (component: ComponentData) => {
+    if (typeof component.propValue !== "object") {
+      return {
+        modelValue: component.propValue,
+      };
+    }
+    return component.propValue;
+  };
+});
 
 const getEditorStyleComputed = computed((): StyleValue => {
   return {
@@ -29,9 +79,8 @@ const getEditorStyleComputed = computed((): StyleValue => {
   };
 });
 
-function handleDrop(e: DragEvent) {
-  e.preventDefault();
-  e.stopPropagation();
+function handlerMouseDown(e: MouseEvent) {
+  lowCodeStore.setCurrentComponentById();
 }
 </script>
 

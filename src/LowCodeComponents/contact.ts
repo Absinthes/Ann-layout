@@ -11,7 +11,10 @@ export const componentlist: ComponentData[] = [
     icon: "icon-wenzigongju",
     animations: [],
     events: {},
-    style: {},
+    style: {
+      width: 150,
+      height: 20,
+    },
   },
   {
     component: () => markRaw(VButton),
@@ -20,6 +23,9 @@ export const componentlist: ComponentData[] = [
     icon: "icon-anniu",
     animations: [],
     events: {},
-    style: {},
+    style: {
+      width: 100,
+      height: 50,
+    },
   },
 ];

@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
 import { Icon } from "./Icon";
-import { componentlist } from "~/customComponents";
+import { componentlist } from "~/LowCodeComponents";
 
 function handlerDragStart(e: DragEvent) {
   // @ts-ignore

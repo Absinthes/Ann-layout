@@ -18,20 +18,23 @@
       <span mx-2>*</span>
       <el-input v-model="editHeight" class="w-120px"></el-input>
     </div>
-    <span ml-3 mr-2 white-nowrap >画布比例</span>
-    <el-input :model-value="100" :max="100" :min="0" class="w-120px"></el-input>
+    <span ml-3 mr-2 white-nowrap>画布比例</span>
+    <el-input
+      v-model="editRatio"
+      :max="100"
+      :min="0"
+      class="w-120px"
+    ></el-input>
     <span>%</span>
   </div>
 </template>
-  
-<script lang='ts' setup>
-import { storeToRefs } from 'pinia';
-import { useLowCodeStore } from '~/store';
 
-const lowCodeStore = useLowCodeStore()
-const { editWidth, editHeight } = storeToRefs(lowCodeStore)
+<script lang="ts" setup>
+import { storeToRefs } from "pinia";
+import { useLowCodeStore } from "~/store";
 
+const lowCodeStore = useLowCodeStore();
+const { editWidth, editHeight, editRatio } = storeToRefs(lowCodeStore);
 </script>
-  
-<style lang='stylus' scoped></style>
-  
+
+<style lang="stylus" scoped></style>

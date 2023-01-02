@@ -29,6 +29,7 @@ import { ComponentData, PointType } from "~/types";
 const props = defineProps<{
   id: number;
   active: boolean;
+  zIndex: number
 }>();
 const lowCodeStore = useLowCodeStore();
 const { currentComponent } = storeToRefs(lowCodeStore);

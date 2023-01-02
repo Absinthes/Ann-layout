@@ -10,10 +10,11 @@
     >
       <Grid />
       <Shape
-        v-for="(it, index) in editComponentList"
+        v-for="(it, index) in localCanvasData"
         :id="it.id!"
         :active="currentComponent?.id == it.id"
         :style="wrapStyleComputed(it)"
+        :zIndex="index"
       >
         <component
           w-full
@@ -36,7 +37,7 @@ import { useLowCodeStore } from "~/store";
 import { ComponentData } from "~/types/lowCode";
 
 const lowCodeStore = useLowCodeStore();
-const { editWidth, editHeight, editComponentList, currentComponent } =
+const { editWidth, editHeight, localCanvasData, currentComponent } =
   storeToRefs(lowCodeStore);
 
 const componentStyleComputed = computed(() => {

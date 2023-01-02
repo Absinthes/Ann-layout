@@ -1,8 +1,14 @@
 <template>
   <div flex items-center px-10px py-4 shadow>
     <el-button>JSON</el-button>
-    <el-button>撤销</el-button>
-    <el-button>重做</el-button>
+    <el-button :disabled="stackIndex == -1" @click="lowCodeStore.revocation"
+      >撤销</el-button
+    >
+    <el-button
+      :disabled="stackIndex == stack.length - 1"
+      @click="lowCodeStore.renewal"
+      >重做</el-button
+    >
     <el-button>插入图片</el-button>
     <el-button>预览</el-button>
     <el-button>保存</el-button>
@@ -34,7 +40,8 @@ import { storeToRefs } from "pinia";
 import { useLowCodeStore } from "~/store";
 
 const lowCodeStore = useLowCodeStore();
-const { editWidth, editHeight, editRatio } = storeToRefs(lowCodeStore);
+const { editWidth, editHeight, editRatio, stackIndex, stack } =
+  storeToRefs(lowCodeStore);
 </script>
 
 <style lang="stylus" scoped></style>

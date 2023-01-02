@@ -115,6 +115,7 @@ function handlerMouseDownPoint(e: MouseEvent, point: PointType) {
   };
 
   const up = () => {
+    lowCodeStore.recordStack()
     document.removeEventListener("mousemove", move);
     document.removeEventListener("mouseup", up);
   };

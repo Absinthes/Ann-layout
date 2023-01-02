@@ -1,1 +1,1 @@
-export * from "./lowCodeStore";
+export * from "./LowCodeStore";

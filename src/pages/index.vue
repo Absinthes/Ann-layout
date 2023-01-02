@@ -1,20 +1,25 @@
 <template>
-  <Toolbar />
-  <main font-sans class="main">
-    <section class="left">
-      <ComponetList />
-    </section>
-    <section class="center bg-#f5f5f5" p5 overflow-auto>
-      <div
-        overflow-auto
-        @drop.prevent.stop="handleDrop"
-        @dragover.prevent="handleDragOver"
-      >
-        <Editor ref="editor" />
-      </div>
-    </section>
-    <section class="right"></section>
-  </main>
+  <div flex="~ col" h-full >
+    <Toolbar />
+    <main font-sans class="main" flex-1  >
+      <section class="left" relative>
+        <ComponetList class="h-65%" box-border />
+        <ComponentLayout class="h-35%" box-border />
+      </section>
+      <section class="center bg-#f5f5f5" p5 overflow-auto>
+        <div
+          h-full
+          overflow-auto
+          overflow-hidden
+          @drop.prevent.stop="handleDrop"
+          @dragover.prevent="handleDragOver"
+        >
+          <Editor ref="editor" />
+        </div>
+      </section>
+      <section class="right"></section>
+    </main>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -48,11 +53,11 @@ function handleDragOver(e: DragEvent) {
 <style lang="scss" scoped>
 .main {
   display: flex;
-  height: calc(100vh - 63px);
-
+  overflow: hidden;
   .left {
     flex-shrink: 0;
     width: 200px;
+    height: 100%;
   }
 
   .center {

@@ -32,6 +32,7 @@ function handlerDragStart(e: DragEvent) {
   grid-template-columns: repeat(2, 1fr);
   gap: 15px;
   justify-content: space-around;
+  align-items: flex-start;
   padding: 20px;
 }
 </style>

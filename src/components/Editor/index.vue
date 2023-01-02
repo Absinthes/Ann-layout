@@ -11,6 +11,7 @@
       <Grid />
       <Shape
         v-for="(it, index) in localCanvasData"
+        :key="it.id"
         :id="it.id!"
         :active="currentComponent?.id == it.id"
         :style="wrapStyleComputed(it)"

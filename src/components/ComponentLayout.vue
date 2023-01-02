@@ -1,5 +1,5 @@
 <template>
-  <div class="component-layout" border="t gray-2">
+  <el-scrollbar class="component-layout" border="t gray-2">
     <div
       v-for="(component, index) in localCanvasData"
       :key="component.id"
@@ -43,7 +43,7 @@
         ></i>
       </div>
     </div>
-  </div>
+  </el-scrollbar>
 </template>
 
 <script setup lang="ts">

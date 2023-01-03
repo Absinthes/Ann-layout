@@ -12,6 +12,8 @@ export const componentlist: ComponentData[] = [
     animations: [],
     events: {},
     style: {
+      left: 0,
+      top: 0,
       width: 150,
       height: 20,
     },
@@ -24,6 +26,8 @@ export const componentlist: ComponentData[] = [
     animations: [],
     events: {},
     style: {
+      left: 0,
+      top: 0,
       width: 100,
       height: 50,
     },

@@ -6,12 +6,11 @@ export type ComponentStyle = {} & BaseComponentStyle & PartialComponentStyle;
 export type BaseComponentStyle = {
   width: number;
   height: number;
-};
-
-export type PartialComponentStyle = Partial<{
   left: number;
   top: number;
-}>;
+};
+
+export type PartialComponentStyle = Partial<{}>;
 
 export type ComponentData = {
   id?: number;

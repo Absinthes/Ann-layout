@@ -23,13 +23,14 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { StyleValue } from "vue";
+import { emitter } from "~/shared";
 import { useLowCodeStore } from "~/store";
 import { ComponentData, PointType } from "~/types";
 
 const props = defineProps<{
   id: number;
   active: boolean;
-  zIndex: number
+  zIndex: number;
 }>();
 const lowCodeStore = useLowCodeStore();
 const { currentComponent } = storeToRefs(lowCodeStore);
@@ -78,11 +79,13 @@ function handlerMouseDown(e: MouseEvent) {
       left: left + curX - prevX,
       top: top + curY - prevY,
     });
+    emitter.emit("move");
   };
 
   const up = (e: MouseEvent) => {
     document.removeEventListener("mousemove", move);
     document.removeEventListener("mouseup", up);
+    emitter.emit("unMove");
   };
 
   document.addEventListener("mousemove", move);
@@ -115,7 +118,7 @@ function handlerMouseDownPoint(e: MouseEvent, point: PointType) {
   };
 
   const up = () => {
-    lowCodeStore.recordStack()
+    lowCodeStore.recordStack();
     document.removeEventListener("mousemove", move);
     document.removeEventListener("mouseup", up);
   };

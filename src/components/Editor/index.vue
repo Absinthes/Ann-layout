@@ -27,6 +27,7 @@
           :data-index="index"
         />
       </Shape>
+      <MarkLine />
     </div>
   </el-scrollbar>
 </template>

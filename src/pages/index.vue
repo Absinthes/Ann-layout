@@ -17,7 +17,9 @@
           <Editor ref="editor" />
         </div>
       </section>
-      <section class="right"></section>
+      <section class="right">
+        <Attr v-show="currentComponent" />
+      </section>
     </main>
   </div>
 </template>
@@ -30,7 +32,7 @@ import Editor from "~/components/Editor/index.vue";
 import { storeToRefs } from "pinia";
 
 const lowCodeStore = useLowCodeStore();
-const { editorEl } = storeToRefs(lowCodeStore);
+const { editorEl, currentComponent } = storeToRefs(lowCodeStore);
 
 function handleDrop(e: DragEvent) {
   const { clientX, clientY } = e;

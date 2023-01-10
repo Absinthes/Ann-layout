@@ -1,2 +1,2 @@
 export * from "./basicType"
-export * from "./lowCode"
+export * from "./LowCode"

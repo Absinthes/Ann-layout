@@ -14,14 +14,14 @@
         :key="it.id"
         :id="it.id!"
         :active="currentComponent?.id == it.id"
-        :style="wrapStyleComputed(it)"
+        :style="wrapStyleComputed(it.style)"
         :zIndex="index"
       >
         <component
           w-full
           h-full
           :is="it.component()"
-          :style="componentStyleComputed(it)"
+          :style="componentStyle(it.style)"
           v-bind="bindPropComputed(it)"
           :id="'component_' + it.id"
           :data-index="index"
@@ -33,36 +33,32 @@
 </template>
 
 <script lang="ts" setup>
+import { ElScrollbar } from "element-plus";
 import { storeToRefs } from "pinia";
 import type { StyleValue } from "vue";
+import { combineStyle } from "~/shared";
 import { useLowCodeStore } from "~/store";
-import { ComponentData } from "~/types/lowCode";
+import { ComponentData, ComponentStyle } from "~/types";
 
 const lowCodeStore = useLowCodeStore();
 const { editWidth, editHeight, localCanvasData, currentComponent } =
   storeToRefs(lowCodeStore);
 
-const componentStyleComputed = computed(() => {
-  return (component: ComponentData): StyleValue => {
-    const { width, height, left, top, ...rest } = component.style;
-    return {
-      ...rest,
-    };
-  };
-});
+const componentStyle = (style: ComponentStyle): StyleValue => {
+  const { width, height, left, top, ...rest } = style;
+  return combineStyle(rest);
+};
 
-const wrapStyleComputed = computed(() => {
-  return (component: ComponentData): StyleValue => {
-    const { width, height, left, top } = component.style;
-    return {
-      position: "absolute",
-      left: left + "px",
-      top: top + "px",
-      width: width + "px",
-      height: height + "px",
-    };
+const wrapStyleComputed = (style: ComponentStyle): StyleValue => {
+  const { width, height, left, top } = style;
+  return {
+    position: "absolute",
+    left: left + "px",
+    top: top + "px",
+    width: width + "px",
+    height: height + "px",
   };
-});
+};
 
 const bindPropComputed = computed(() => {
   return (component: ComponentData) => {

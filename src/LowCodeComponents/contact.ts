@@ -1,5 +1,5 @@
 import { markRaw } from "vue";
-import { ComponentData } from "~/types/lowCode";
+import { ComponentData } from "~/types";
 import VText from "./VText/index.vue";
 import VButton from "./VButton/index.vue";
 
@@ -17,6 +17,7 @@ export const componentlist: ComponentData[] = [
       width: 150,
       height: 20,
     },
+    styleCollapse: [],
   },
   {
     component: () => markRaw(VButton),
@@ -30,6 +31,9 @@ export const componentlist: ComponentData[] = [
       top: 0,
       width: 100,
       height: 50,
+      borderRadius: 0,
+      borderWidth: 1,
     },
+    styleCollapse: [],
   },
 ];

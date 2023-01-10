@@ -1,5 +1,5 @@
-import { Component, Raw } from "vue";
-import { Props, WarpFunc } from ".";
+import { Raw, Component } from "vue";
+import { WarpFunc, Props } from "../basicType";
 
 export type ComponentStyle = {} & BaseComponentStyle & PartialComponentStyle;
 
@@ -10,7 +10,12 @@ export type BaseComponentStyle = {
   top: number;
 };
 
-export type PartialComponentStyle = Partial<{}>;
+export type PartialComponentStyle = Partial<{
+  background: string;
+  shadow: string;
+  borderWidth: number;
+  borderRadius: number;
+}>;
 
 export type ComponentData = {
   id?: number;
@@ -21,4 +26,5 @@ export type ComponentData = {
   animations: any[];
   events: Record<string, Function>;
   style: ComponentStyle;
+  styleCollapse: string[];
 };

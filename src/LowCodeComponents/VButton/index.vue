@@ -1,20 +1,20 @@
 <template>
-  <button border="~ gray-2" bg-white >
+  <button border="style-solid gray-2" bg-white>
     {{ modelValue }}
   </button>
 </template>
 
 <script setup lang="ts">
-  const props = withDefaults(
-    defineProps<{
-      modelValue?: string;
-    }>(),
-    {
-      modelValue: "",
-    }
-  );
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string;
+  }>(),
+  {
+    modelValue: "",
+  }
+);
 
-  const { modelValue } = toRefs(props);
+const { modelValue } = toRefs(props);
 </script>
 
 <style scoped></style>

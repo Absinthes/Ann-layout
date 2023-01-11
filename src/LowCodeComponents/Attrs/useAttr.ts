@@ -19,6 +19,7 @@ export const useAttr = () => {
   });
 
   function handlerChange(key: string, value: any) {
+    if(!key) return
     lowCodeStore.setCurComponentStyle({
       [key]: value,
     });

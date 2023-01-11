@@ -12,13 +12,14 @@ export enum AttrComponentTypeEnum {
   INPUT = "input",
   INPUT_NUMBER = "inputNumber",
   SELECT = "select",
+  COLOR = "color",
   OTHER = "other",
 }
 
 export type AttrData = {
-  name: (keyof ComponentStyle)[];
+  name: string;
   title: string;
-  component: (AttrComponentOption | AttrDefaultComponent)[];
+  component: AttrComponentOption[];
 };
 
 export type AttrComponentOption<
@@ -28,27 +29,26 @@ export type AttrComponentOption<
 };
 
 export type AttrDefaultComponent = {
-  type: AttrComponentTypeEnum.OTHER;
-  label?: string;
+  name: keyof ComponentStyle | (keyof ComponentStyle)[];
+  type: AttrComponentTypeEnum;
+  label: string;
+  component: Component;
+  data: SelectItemType[];
+};
+
+export type AttrBaseComponentOptions = {
+  name: keyof ComponentStyle;
+  label: string;
   component: Component;
 };
 
 export type AttrComponentOptionsMap = {
-  [AttrComponentTypeEnum.INPUT]: {
-    type: AttrComponentTypeEnum.INPUT;
-    label: string;
-    component: Component;
-  };
-  [AttrComponentTypeEnum.INPUT_NUMBER]: {
-    type: AttrComponentTypeEnum.INPUT_NUMBER;
-    label: string;
-    component: Component;
-  };
-  [AttrComponentTypeEnum.SELECT]: {
-    type: AttrComponentTypeEnum.SELECT;
-    label: string;
-    data: SelectItemType[];
-    component: Component;
-  };
-  [AttrComponentTypeEnum.OTHER]: AttrDefaultComponent;
+  [AttrComponentTypeEnum.INPUT]: Omit<AttrDefaultComponent, "data">;
+  [AttrComponentTypeEnum.INPUT_NUMBER]: Omit<AttrDefaultComponent, "data">;
+  [AttrComponentTypeEnum.SELECT]: AttrDefaultComponent;
+  [AttrComponentTypeEnum.COLOR]: Omit<AttrDefaultComponent, "data">;
+  [AttrComponentTypeEnum.OTHER]: Pick<
+    AttrDefaultComponent,
+    "type" | "component" | "name"
+  >;
 };

@@ -1,39 +1,38 @@
 <template>
-  <el-form-item label="边框宽度">
-    <el-input
-      type="number"
-      :model-value="currentComponent?.style.borderWidth"
-      placeholder="请输入边框宽度"
-      @update:model-value="handlerChange('borderWidth', +$event)"
-    ></el-input>
-  </el-form-item>
-  <el-form-item label="边框圆角">
+  <el-form-item label="阴影">
     <div class="radiusStyleWrapper" w-full items-start>
       <el-tooltip
-        v-for="it in borderRadiusOptions"
+        v-for="it in shadowOptions"
         :content="it.title"
         placement="top"
       >
         <div
+          flex
+          items-center
+          justify-center
           w-6
           h-6
           border
           cursor-pointer
-          class="p1.5"
           hover="bg-gray-2"
+          class="p1.5"
           :class="[
-            currentComponent?.style.borderRadius == it.value
+            currentComponent?.style.boxShadow == it.value
               ? 'border-#090707'
               : 'border-gray-2',
+            it.title == SizeEnum.NONE &&
+              !currentComponent?.style.boxShadow &&
+              'border-#090707!',
           ]"
-          @click="handlerChange('borderRadius', it.value)"
+          @click="handlerChange('boxShadow', it.value)"
         >
+          <el-icon v-if="it.value == SizeEnum.NONE" text-xl><Close /></el-icon>
           <div
+            v-else
             w-full
             h-full
-            border="l-2 t-2 gray-5"
             :style="{
-              borderTopLeftRadius: it.value + 'px',
+              boxShadow: it.value,
             }"
           ></div>
         </div>
@@ -43,8 +42,9 @@
 </template>
 
 <script setup lang="ts">
-import { borderRadiusOptions } from "./contact";
+import { shadowOptions, SizeEnum } from "./contact";
 import { useAttr } from "./useAttr";
+import { Close } from "@element-plus/icons-vue";
 
 const { currentComponent, handlerChange } = useAttr();
 </script>

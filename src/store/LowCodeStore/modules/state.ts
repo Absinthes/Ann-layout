@@ -6,6 +6,11 @@ import { count, recordStack } from ".";
 export const currentComponent = ref<ComponentData>();
 export const localCanvasData = ref<ComponentData[]>([]);
 
+export function setCurComponentCollapse(newArr: string[]) {
+  if (!currentComponent.value) return;
+  currentComponent.value.styleCollapse = newArr;
+}
+
 export function setComponentData(data: ComponentData[]) {
   localCanvasData.value = data;
 }
@@ -38,12 +43,12 @@ export function addComponent(component: ComponentData) {
     id: count.value++,
     ...component,
   });
-  recordStack()
+  recordStack();
 }
 
 export function removeComponent(index: number) {
   localCanvasData.value.splice(index, 1);
-  recordStack()
+  recordStack();
 }
 
 export function zIndexUp(index: number) {

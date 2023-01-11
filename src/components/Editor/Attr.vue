@@ -1,36 +1,40 @@
 <template>
-  <div px-4>
-    <el-tabs v-model="activeTab" class="demo-tabs">
-      <el-tab-pane
-        v-for="(attr, i) in Attrs"
-        :key="attr.name"
-        :label="attr.name"
-        :name="i"
-      >
-        <el-collapse :model-value="currentComponent?.styleCollapse || []">
-          <el-form label-position="top">
+  <el-tabs v-model="activeTab" class="demo-tabs">
+    <el-tab-pane
+      v-for="(attr, i) in Attrs"
+      :key="attr.name"
+      :label="attr.name"
+      :name="i"
+      h-full
+    >
+      <el-scrollbar>
+        <el-collapse
+          :model-value="currentComponent?.styleCollapse"
+          @update:model-value="lowCodeStore.setCurComponentCollapse"
+        >
+          <el-form label-position="top" mx-4>
             <el-collapse-item
               v-for="it in attr.data"
               :title="it.title"
-              :name="it.name.join()"
-              :key="it.name.join()"
+              :name="it.name"
+              :key="it.name"
             >
               <template v-for="(c, i) in it.component" :key="i">
                 <component
                   v-if="c.type !== AttrComponentTypeEnum.OTHER"
                   :is="c.component"
                   v-bind="c"
-                  :modelValue="currentComponent?.[attr.prop][it.name[i]]"
-                  @update:modelValue="handlerChange(it.name[i], $event)"
+                  :modelValue="currentComponent![attr.prop][c.name]"
+                  @update:modelValue="handlerChange(c.name as string, $event)"
                 />
                 <component v-else :is="c.component" v-bind="c" />
               </template>
             </el-collapse-item>
           </el-form>
         </el-collapse>
-      </el-tab-pane>
-    </el-tabs>
-  </div>
+      </el-scrollbar>
+    </el-tab-pane>
+  </el-tabs>
 </template>
 
 <script setup lang="ts">
@@ -47,7 +51,9 @@ const activeTab = ref(0);
 
 function initAttrCollapse(attrs: Attr[]) {
   return attrs
-    .map((it) => it.data.map((c) => c.name.join()))
+    .map((it) =>
+      it.data.map((c) => (Array.isArray(c.name) ? c.name.join() : c.name))
+    )
     .flat(Infinity) as string[];
 }
 
@@ -63,4 +69,16 @@ watch(currentComponent, () => {
 });
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.demo-tabs {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  :deep(.el-tabs__header) {
+    padding: 0 1rem;
+  }
+  :deep(.el-tabs__content) {
+    flex: 1 1 0;
+  }
+}
+</style>

@@ -12,7 +12,8 @@ export type BaseComponentStyle = {
 
 export type PartialComponentStyle = Partial<{
   background: string;
-  shadow: string;
+  color: string;
+  boxShadow: string;
   borderWidth: number;
   borderRadius: number;
 }>;

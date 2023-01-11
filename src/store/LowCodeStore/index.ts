@@ -21,6 +21,7 @@ import {
   renewal,
   stack,
   stackIndex,
+  setCurComponentCollapse
 } from "./modules";
 
 export const useLowCodeStore = defineStore("lowCode", () => {
@@ -50,5 +51,6 @@ export const useLowCodeStore = defineStore("lowCode", () => {
     recordStack,
     stack,
     stackIndex,
+    setCurComponentCollapse
   };
 });

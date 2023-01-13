@@ -61,6 +61,12 @@ export const Attrs: Attr[] = [
             component: Input,
           },
           {
+            name: "rotate",
+            type: AttrComponentTypeEnum.INPUT_NUMBER,
+            label: "旋转角度",
+            component: Input,
+          },
+          {
             name: "background",
             type: AttrComponentTypeEnum.COLOR,
             label: "背景色",
@@ -73,6 +79,7 @@ export const Attrs: Attr[] = [
             component: Color,
           },
         ] as [
+          AttrComponentOption<AttrComponentTypeEnum.INPUT_NUMBER>,
           AttrComponentOption<AttrComponentTypeEnum.INPUT_NUMBER>,
           AttrComponentOption<AttrComponentTypeEnum.INPUT_NUMBER>,
           AttrComponentOption<AttrComponentTypeEnum.INPUT_NUMBER>,

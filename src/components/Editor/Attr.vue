@@ -24,7 +24,7 @@
                   v-if="c.type !== AttrComponentTypeEnum.OTHER"
                   :is="c.component"
                   v-bind="c"
-                  :modelValue="currentComponent![attr.prop][c.name]"
+                  :modelValue="currentComponent?.[attr.prop][c.name]"
                   @update:modelValue="handlerChange(c.name as string, $event)"
                 />
                 <component v-else :is="c.component" v-bind="c" />

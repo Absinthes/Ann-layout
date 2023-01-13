@@ -1,9 +1,18 @@
 <template>
   <div
+    ref="shapeRef"
     border="~"
     :class="[active ? 'border-sky-4' : 'border-transparent']"
     @mousedown.prevent.stop="handlerMouseDown"
   >
+    <div
+      class="rataion-point"
+      absolute
+      v-show="currentComponent?.id == id"
+      @mousedown.prevent.stop="handleRotation"
+    >
+      <i class="iconfont icon-xuanzhuan" color-blue-3 cursor-grab></i>
+    </div>
     <div
       v-show="active"
       v-for="it in pointList"
@@ -23,7 +32,12 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { StyleValue } from "vue";
-import { emitter } from "~/shared";
+import {
+  calculateComponentGeometricInfo,
+  emitter,
+  getCenterPoint,
+  getComponentGeometricInfo,
+} from "~/shared";
 import { useLowCodeStore } from "~/store";
 import { ComponentData, PointType } from "~/types";
 
@@ -37,6 +51,7 @@ const { currentComponent } = storeToRefs(lowCodeStore);
 const { id } = toRefs(props);
 const pointList: PointType[] = ["lt", "t", "rt", "r", "rb", "b", "lb", "l"];
 const bindComponent = lowCodeStore.getComponentById(id.value) as ComponentData;
+const shapeRef = ref<HTMLElement>();
 
 function getPointStyle(point: PointType): StyleValue {
   const { width, height } = bindComponent.style;
@@ -69,8 +84,11 @@ function getPointStyle(point: PointType): StyleValue {
 
 function handlerMouseDown(e: MouseEvent) {
   lowCodeStore.setCurrentComponentById(id.value);
-  // @ts-ignore
-  const { left, top } = currentComponent.value?.style;
+
+  if (!currentComponent.value) return;
+
+  const { left, top } = getComponentGeometricInfo(currentComponent.value.style);
+
   let { clientX: prevX, clientY: prevY } = e;
 
   const move = (e: MouseEvent) => {
@@ -93,32 +111,90 @@ function handlerMouseDown(e: MouseEvent) {
 }
 
 function handlerMouseDownPoint(e: MouseEvent, point: PointType) {
-  const { width, height, left, top } = bindComponent.style;
-  const { clientX: prevX, clientY: prevY } = e;
+  if (!currentComponent.value) return;
+  const { left, top, width, height } = getComponentGeometricInfo(
+    currentComponent.value.style
+  );
+
+  // 组件中心点
+  const center = {
+    x: left + width / 2,
+    y: top + height / 2,
+  };
+
+  // 获取画布位移信息
+  const editorRectInfo = (
+    document.querySelector("#editor") as HTMLElement
+  ).getBoundingClientRect();
+
+  // 当前点击坐标位置
+  const curPoint = {
+    x: e.clientX - editorRectInfo.left,
+    y: e.clientY - editorRectInfo.top,
+  };
+
+  // 对称点
+  const symmetricPoint = {
+    x: center.x + (center.x - curPoint.x),
+    y: center.y + (center.y - curPoint.y),
+  };
 
   const move = (e: MouseEvent) => {
-    const { clientX: curX, clientY: curY } = e;
-    const disX = curX - prevX;
-    const disY = curY - prevY;
-    const hasT = /t/.test(point);
-    const hasB = /b/.test(point);
-    const hasL = /l/.test(point);
-    const hasR = /r/.test(point);
-    const newHeight = height + (hasT ? -disY : hasB ? disY : 0);
-    const newWidth = width + (hasL ? -disX : hasR ? disX : 0);
-    const newLeft = left! + (hasL ? disX : 0);
-    const newTop = top! + (hasT ? disY : 0);
-    const { left: prevLeft, top: preTop } = bindComponent.style;
-    lowCodeStore.setComponentStyle(id.value, {
-      left: newWidth < 0 ? prevLeft : newLeft,
-      top: newHeight < 0 ? preTop : newTop,
-      width: Math.abs(newWidth),
-      height: Math.abs(newHeight),
-    });
+    if (!currentComponent.value) return;
+    const curPosition = {
+      x: e.clientX - editorRectInfo.left,
+      y: e.clientY - editorRectInfo.top,
+    };
+
+    const newCenterPoint = getCenterPoint(curPosition, symmetricPoint);
+
+    const newPostionStyle = calculateComponentGeometricInfo(
+      point,
+      currentComponent.value.style,
+      curPosition,
+      {
+        curPoint,
+        symmetricPoint,
+        center,
+        newCenter: newCenterPoint,
+      }
+    );
+
+    lowCodeStore.setCurComponentStyle(newPostionStyle);
   };
 
   const up = () => {
     lowCodeStore.recordStack();
+    document.removeEventListener("mousemove", move);
+    document.removeEventListener("mouseup", up);
+  };
+
+  document.addEventListener("mousemove", move);
+  document.addEventListener("mouseup", up);
+}
+
+function handleRotation(e: MouseEvent) {
+  if (!shapeRef.value || !currentComponent.value) return;
+  const startY = e.clientY;
+  const startX = e.clientX;
+  const rect = shapeRef.value.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  const { rotate: startRotate } = currentComponent.value.style;
+  const rotateDegreeBefore =
+    Math.atan2(startY - centerY, startX - centerX) / (Math.PI / 180);
+
+  const move = (e: MouseEvent) => {
+    const curX = e.clientX;
+    const curY = e.clientY;
+    const rotateDegreeAfter =
+      Math.atan2(curY - centerY, curX - centerX) / (Math.PI / 180);
+    lowCodeStore.setCurComponentStyle({
+      rotate: Math.floor(startRotate + rotateDegreeAfter - rotateDegreeBefore),
+    });
+  };
+
+  const up = () => {
     document.removeEventListener("mousemove", move);
     document.removeEventListener("mouseup", up);
   };
@@ -132,5 +208,9 @@ function handlerMouseDownPoint(e: MouseEvent, point: PointType) {
 .point-basic {
   position: absolute;
   transform: translate(-50%, -50%);
+}
+.rataion-point {
+  left: 50%;
+  transform: translate(-50%, -150%);
 }
 </style>

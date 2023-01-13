@@ -8,6 +8,7 @@ export type BaseComponentStyle = {
   height: number;
   left: number;
   top: number;
+  rotate: number;
 };
 
 export type PartialComponentStyle = Partial<{

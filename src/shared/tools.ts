@@ -11,7 +11,7 @@ export function swapArray(
 }
 
 export function getComponentGeometricInfo(style: ComponentStyle) {
-  const { left, top, width, height } = style;
+  const { left, top, width, height, rotate } = style;
   return {
     left,
     top,
@@ -19,5 +19,6 @@ export function getComponentGeometricInfo(style: ComponentStyle) {
     bottom: top + height,
     width,
     height,
+    rotate
   };
 }

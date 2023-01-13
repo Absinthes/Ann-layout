@@ -50,13 +50,14 @@ const componentStyle = (style: ComponentStyle): StyleValue => {
 };
 
 const wrapStyleComputed = (style: ComponentStyle): StyleValue => {
-  const { width, height, left, top } = style;
+  const { width, height, left, top, rotate } = style;
   return {
     position: "absolute",
     left: left + "px",
     top: top + "px",
     width: width + "px",
     height: height + "px",
+    rotate: rotate + "deg",
   };
 };
 

@@ -14,7 +14,11 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { StyleValue } from "vue";
-import { emitter, getComponentGeometricInfo } from "~/shared";
+import {
+  ComponentGeometricInfoReturnType,
+  emitter,
+  getComponentGeometricInfo,
+} from "~/shared";
 import { useLowCodeStore } from "~/store";
 
 type Line = "xt" | "xc" | "xb" | "yl" | "yc" | "yr";
@@ -70,6 +74,7 @@ emitter.on("unMove", () => {
 });
 
 function showLine() {
+  const currentStyle = getComponentGeometricInfo(currentComponent.value!.style);
   const {
     left: curLeft,
     right: curRight,
@@ -77,7 +82,8 @@ function showLine() {
     bottom: curBottom,
     width: curWidth,
     height: curHeight,
-  } = getComponentGeometricInfo(currentComponent.value!.style);
+    rotate,
+  } = currentStyle;
 
   const curHalfWidth = curWidth / 2;
   const curHalfHeight = curHeight / 2;
@@ -88,7 +94,7 @@ function showLine() {
     if (component.id == currentComponent.value?.id) return;
     const { left, right, top, bottom, width, height } =
       getComponentGeometricInfo(component.style);
-
+    console.log(top, curBottom);
     const conditions: Condition = {
       top: [
         {
@@ -153,10 +159,17 @@ function showLine() {
           lineState.value[condition.line].style[key as Position] =
             condition.lineValue;
 
-          currentComponent.value?.id &&
-            lowCodeStore.setComponentStyle(currentComponent.value.id, {
-              [key]: condition.curValue,
-            });
+          if (!currentComponent.value?.id) return;
+          lowCodeStore.setComponentStyle(currentComponent.value.id, {
+            [key]:
+              rotate !== 0
+                ? transformCurComponetStyle(
+                    key as "left" | "top",
+                    condition.curValue,
+                    currentStyle
+                  )
+                : condition.curValue,
+          });
         }
       });
     });
@@ -164,6 +177,21 @@ function showLine() {
   needShowLine.forEach((it) => {
     lineState.value[it].isShow = true;
   });
+}
+
+function transformCurComponetStyle(
+  key: "left" | "top",
+  value: number,
+  currentStyle: ComponentGeometricInfoReturnType
+) {
+  if (!currentComponent.value) return 0;
+  const { width, height } = currentComponent.value.style;
+  if (key == "left") {
+    return value - (width - currentStyle.width) / 2;
+  }
+  if (key == "top") {
+    return value - (height - currentStyle.height) / 2;
+  }
 }
 
 function hideLine() {

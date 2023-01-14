@@ -206,7 +206,7 @@ function calculateTopPoint(
     (rotatedTopMiddlePoint.x - symmetricPoint.x) ** 2 +
       (rotatedTopMiddlePoint.y - symmetricPoint.y) ** 2
   );
-  
+
   const newCenter = {
     x:
       rotatedTopMiddlePoint.x -
@@ -216,7 +216,91 @@ function calculateTopPoint(
       (symmetricPoint.y - rotatedTopMiddlePoint.y) / 2,
   };
 
-  console.log(newCenter);
+  return {
+    left: newCenter.x - style.width / 2,
+    top: newCenter.y - newHeight / 2,
+    width: style.width,
+    height: newHeight,
+  };
+}
+
+function calculateRightPoint(
+  style: ComponentStyle,
+  curPostion: BasePostionType,
+  pointInfoData: PointInfoData
+): CalculateFuncReturn {
+  const { symmetricPoint, curPoint } = pointInfoData;
+  const rotatedCurrentPosition = calculateRotatedPointCoordinate(
+    curPostion,
+    curPoint,
+    -style.rotate
+  );
+
+  const rotatedRightMiddlePoint = calculateRotatedPointCoordinate(
+    {
+      x: rotatedCurrentPosition.x,
+      y: curPoint.y,
+    },
+    curPoint,
+    style.rotate
+  );
+
+  const newWidth = Math.sqrt(
+    (rotatedRightMiddlePoint.x - symmetricPoint.x) ** 2 +
+      (rotatedRightMiddlePoint.y - symmetricPoint.y) ** 2
+  );
+
+  const newCenter = {
+    x:
+      rotatedRightMiddlePoint.x -
+      (rotatedRightMiddlePoint.x - symmetricPoint.x) / 2,
+    y:
+      rotatedRightMiddlePoint.y +
+      (symmetricPoint.y - rotatedRightMiddlePoint.y) / 2,
+  };
+
+  return {
+    left: newCenter.x - newWidth / 2,
+    top: newCenter.y - style.height / 2,
+    width: newWidth,
+    height: style.height,
+  };
+}
+
+function calculateBottomPoint(
+  style: ComponentStyle,
+  curPostion: BasePostionType,
+  pointInfoData: PointInfoData
+): CalculateFuncReturn {
+  const { symmetricPoint, curPoint } = pointInfoData;
+  const rotatedCurrentPosition = calculateRotatedPointCoordinate(
+    curPostion,
+    curPoint,
+    -style.rotate
+  );
+
+  const rotatedBottomMiddlePoint = calculateRotatedPointCoordinate(
+    {
+      x: curPoint.x,
+      y: rotatedCurrentPosition.y,
+    },
+    curPoint,
+    style.rotate
+  );
+
+  const newHeight = Math.sqrt(
+    (rotatedBottomMiddlePoint.x - symmetricPoint.x) ** 2 +
+      (rotatedBottomMiddlePoint.y - symmetricPoint.y) ** 2
+  );
+
+  const newCenter = {
+    x:
+      rotatedBottomMiddlePoint.x -
+      (rotatedBottomMiddlePoint.x - symmetricPoint.x) / 2,
+    y:
+      rotatedBottomMiddlePoint.y +
+      (symmetricPoint.y - rotatedBottomMiddlePoint.y) / 2,
+  };
 
   return {
     left: newCenter.x - style.width / 2,
@@ -226,12 +310,58 @@ function calculateTopPoint(
   };
 }
 
+function calculateLeftPoint(
+  style: ComponentStyle,
+  curPostion: BasePostionType,
+  pointInfoData: PointInfoData
+): CalculateFuncReturn {
+  const { symmetricPoint, curPoint } = pointInfoData;
+  const rotatedCurrentPosition = calculateRotatedPointCoordinate(
+    curPostion,
+    curPoint,
+    -style.rotate
+  );
+
+  const rotatedTopMiddlePoint = calculateRotatedPointCoordinate(
+    {
+      x: rotatedCurrentPosition.x,
+      y: curPoint.y,
+    },
+    curPoint,
+    style.rotate
+  );
+
+  const newWidth = Math.sqrt(
+    (rotatedTopMiddlePoint.x - symmetricPoint.x) ** 2 +
+      (rotatedTopMiddlePoint.y - symmetricPoint.y) ** 2
+  );
+
+  const newCenter = {
+    x:
+      rotatedTopMiddlePoint.x -
+      (rotatedTopMiddlePoint.x - symmetricPoint.x) / 2,
+    y:
+      rotatedTopMiddlePoint.y +
+      (symmetricPoint.y - rotatedTopMiddlePoint.y) / 2,
+  };
+
+  return {
+    left: newCenter.x - newWidth / 2,
+    top: newCenter.y - style.height / 2,
+    width: newWidth,
+    height: style.height,
+  };
+}
+
 const calculateFunc: CalculateFunc = {
   lt: calculateLeftTopPoint,
   lb: calculateLeftBottomPoint,
   rt: calculateRightTopPoint,
   rb: calculateRightBottomPoint,
   t: calculateTopPoint,
+  r: calculateRightPoint,
+  b: calculateBottomPoint,
+  l: calculateLeftPoint,
 };
 
 export function calculateComponentGeometricInfo(

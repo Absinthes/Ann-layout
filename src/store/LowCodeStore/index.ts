@@ -21,7 +21,12 @@ import {
   renewal,
   stack,
   stackIndex,
-  setCurComponentCollapse
+  setCurComponentCollapse,
+  areaData,
+  setAreaData,
+  isShowArea,
+  setIsShowArea,
+  clearAreaComponents,
 } from "./modules";
 
 export const useLowCodeStore = defineStore("lowCode", () => {
@@ -51,6 +56,11 @@ export const useLowCodeStore = defineStore("lowCode", () => {
     recordStack,
     stack,
     stackIndex,
-    setCurComponentCollapse
+    setCurComponentCollapse,
+    areaData,
+    setAreaData,
+    isShowArea,
+    setIsShowArea,
+    clearAreaComponents
   };
 });
